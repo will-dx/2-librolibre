@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h2>Publicar libro</h2>
+<form method="post" enctype="multipart/form-data">{% csrf_token %}
+  {{ form.as_p }}
+  <button type="button" id="geoBtn" class="btn btn-outline-secondary mb-2">Obtener mi ubicación</button>
+  <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
+<script>
+  document.getElementById('geoBtn').addEventListener('click', () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(pos => {
+        document.getElementById('id_latitud').value = pos.coords.latitude.toFixed(6);
+        document.getElementById('id_longitud').value = pos.coords.longitude.toFixed(6);
+      });
+    } else {
+      alert('Geolocalización no soportada por este navegador.');
+    }
+  });
+</script>
+{% endblock %}

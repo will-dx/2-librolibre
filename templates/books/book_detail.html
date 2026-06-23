@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h2>{{ book.titulo }}</h2>
+<div class="row">
+  <div class="col-md-6">
+    {% if book.foto %}
+      <img src="{{ book.foto.url }}" class="img-fluid" alt="Portada">
+    {% else %}
+      <img src="{% static 'img/placeholder.png' %}" class="img-fluid" alt="Sin portada">
+    {% endif %}
+  </div>
+  <div class="col-md-6">
+    <p><strong>Autor:</strong> {{ book.autor }}</p>
+    <p><strong>Estado:</strong> {{ book.estado }}</p>
+    <p><strong>Propietario:</strong> {{ book.usuario.get_full_name|default:book.usuario.username }}</p>
+    {% if book.latitud and book.longitud %}
+      <div id="mapid" style="height:300px;"></div>
+    {% else %}
+      <p>Ubicación no disponible.</p>
+    {% endif %}
+  </div>
+</div>
+
+{% if book.latitud and book.longitud %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-sA+…" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-XQo…" crossorigin=""></script>
+<script>
+  const lat = {{ book.latitud }};
+  const lng = {{ book.longitud }};
+  const map = L.map('mapid').setView([lat, lng], 13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+  L.marker([lat, lng]).addTo(map).bindPopup('Propietario del libro').openPopup();
+</script>
+{% endif %}
+{% endblock %}
