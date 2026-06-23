@@ -2,4 +2,4 @@ Django>=6.0,<7.0
 pillow
 gunicorn
 whitenoise
-dj-database-url
+psycopg[binary]>=3.2
